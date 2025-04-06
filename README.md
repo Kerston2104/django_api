@@ -30,8 +30,8 @@ This is a RESTful API built using **Django** and **Django REST Framework**. The 
 
 ```
 django_api/
-├── api/                # Your core API app
-├── django_api/         # Main Django settings and URLs
+├── ApiProject/                # Your core API app
+├── ApiApplication/         # Main Django settings and URLs
 ├── manage.py           # Django management script
 └── requirements.txt    # Python dependencies
 ```
@@ -75,8 +75,7 @@ Use tools like **Postman**, **Insomnia**, or **cURL** to test your endpoints.
 
 - Base URL: `http://localhost:8000/`
 - Common endpoints:
-  - `/api/`
-  - `/api/token/` (if JWT auth is enabled)
+  - `/api/user/` (user add to the database)
   - `/admin/` (Django admin)
 
 ---

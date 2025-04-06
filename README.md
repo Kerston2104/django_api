@@ -49,7 +49,10 @@ django_api/
 2. **Create virtual environment**
    ```bash
    python -m venv venv
-   source venv/bin/activate  # For Windows: venv\Scripts\activate
+   #For Linux & MAC:
+   source venv/bin/activate
+   # For Windows:
+   venv\Scripts\activate
    ```
 
 3. **Install dependencies**

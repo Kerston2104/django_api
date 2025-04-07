@@ -6,9 +6,8 @@ This is a RESTful API built using **Django** and **Django REST Framework**. The 
 
 ## 🚀 Features
 
-- 🔐 Token-based Authentication
+- 🔐 User-based Authentication
 - 📦 Modular App Structure
-- 🔄 Full CRUD Support
 - 🌐 CORS Enabled
 - 📂 Environment-based Settings
 - 🧪 Easy Testing Setup
@@ -19,10 +18,8 @@ This is a RESTful API built using **Django** and **Django REST Framework**. The 
 
 - Python 3.x  
 - Django  
-- Django REST Framework  
-- SQLite / PostgreSQL (configurable)  
+- Django REST Framework   
 - CORS Headers  
-- DRF Simple JWT (optional for auth)  
 
 ---
 

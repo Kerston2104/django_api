@@ -1,40 +1,55 @@
-from django.contrib.auth import authenticate
-from django.shortcuts import render
+from django.contrib.auth.hashers import make_password, check_password
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
-from .models import *
 
-# Create your views here.
+from .models import User
 
 class UserApiView(APIView):
     def get(self, request):
-        allUsers=User.objects.all().values()
-        return Response({'Message':"list of users","Users List":allUsers})
-    
+        allUsers = User.objects.all().values()
+        return Response({'message': "List of users", "users": allUsers})
+
     def post(self, request):
-        User.objects.create(
-            username=request.data['username'],
-            email=request.data['email'],
-            password=request.data['password']
-        )
+        username = request.data.get('username')
+        email = request.data.get('email', '')
+        password = request.data.get('password')
 
-        user=User.objects.all().filter(username=request.data['username']).values()
+        try:
+            user = User.objects.get(username=username)
+            if check_password(password, user.password):
+                return Response({
+                    'message': f"Welcome back, {username}!",
+                    'user': {'username': user.username, 'email': user.email}
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response({'error': 'Incorrect password'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        return Response({'Message':"New user added","User":user})
-    
+        except User.DoesNotExist:
+            hashed_password = make_password(password)
+            new_user = User.objects.create(
+                username=username,
+                email=email,
+                password=hashed_password
+            )
+            return Response({
+                'message': f"New user {username} signed up successfully.",
+                'user': {'username': new_user.username, 'email': new_user.email}
+            }, status=status.HTTP_200_OK)
+
     def delete(self, request):
         User.objects.all().delete()
-        return Response({'Message': "All users deleted successfully"})
-    
+        return Response({'message': "All users deleted successfully"})
+
 @api_view(['DELETE'])
-def delete_user(request, username,password):
+def delete_user(request, username, password):
     try:
-        user = User.objects.get(username=username,password=password)
-        user.delete()
-        return Response({'Message':'user deleted successfully'},status=status.HTTP_204_NO_CONTENT)
+        user = User.objects.get(username=username)
+        if check_password(password, user.password):
+            user.delete()
+            return Response({'message': 'User deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({'error': 'Incorrect password'}, status=status.HTTP_400_BAD_REQUEST)
     except User.DoesNotExist:
         return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-    
-
